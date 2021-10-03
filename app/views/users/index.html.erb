@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="alert alert-secondary text-center">ユーザー一覧です</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ユーザー名</th>
+      </tr>
+    </thead>
+     <% if @users.any? %>
+      <% @users.each do |user| %>
+        <tr>
+          <td class="align-middle"><%= user.id %></td>
+          <td class="d-flex justify-content-between align-items-center">
+            <div><%= user.name %></div>
+            <div>
+              <%= link_to "詳細", user_path(user), class:"btn btn-info text-primary" %>
+              <%= link_to "編集", user_path(user), class:"btn btn-success" %>
+              <%= link_to "削除", user_path(user), class:"btn btn-danger", method: :delete %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="2">
+          登録されているユーザーはいません
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
