@@ -1,20 +1,18 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
   def index
     @users = User.all
   end
 
   def show
-    @firend_ids = []
-    @user.friends.each do |friend|
-      @firend_ids << friend.friend
-    end
+    @firends = set_user_frieds
 
     render json: {
       "id": @user.id,
       "name": @user.name,
-      "friends": @firend_ids
-    }    
+      "friends": @firends
+    }
+
   end
 
   def new
@@ -32,12 +30,26 @@ class UsersController < ApplicationController
   end
 
   def edit
+    friends = set_user_frieds
+    @user_friend = UserFriend.new(name: @user.name, user_id: @user.id, friends: friends)
   end
 
   def update
+    @user_friend = UserFriend.new(user_friend_params)
+    if @user_friend.valid?
+      @user_friend.update
+      redirect_to action: :index
+    else
+      render edit
+    end
   end
 
   def destroy
+    @user.destroy
+    Friend.where(friend: @user.id).each do |friend|
+      friend.destroy
+    end
+    redirect_to action: :index
   end
 
   private
@@ -45,8 +57,21 @@ class UsersController < ApplicationController
     params.require(:user_friend).permit(:name, friends: [])
   end
 
+  def user_friend_params
+    user_params.merge(user_id: params[:id])
+  end
+
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def set_user_frieds
+    @user = User.find(params[:id])
+    friends = []
+    @user.friends.each do |friend|
+      friends << friend.friend
+    end
+    return friends
   end
 
 end
