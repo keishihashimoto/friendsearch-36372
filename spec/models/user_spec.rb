@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  before do
+    @user1 = FactoryBot.create(:user)
+    @user2 = FactoryBot.create(:user)
+    @user_friend = FactoryBot.build(:user_friend)
+  end
   describe "ユーザー新規登録の単体テスト" do
-    before do
-      @user1 = FactoryBot.create(:user)
-      @user2 = FactoryBot.create(:user)
-      @user_friend = FactoryBot.build(:user_friend)
-    end
     context "新規登録できる時" do
       it "ユーザー名のみでも新規登録ができる" do
         expect(@user_friend).to be_valid
@@ -40,6 +40,15 @@ RSpec.describe User, type: :model do
         @user_friend.friends = [(@user1.id.to_i + @user2.id.to_i )]
         @user_friend.valid?
         expect(@user_friend.errors.full_messages).to include("Friends selected doesn't exist.")
+      end
+    end
+  end
+  describe "ユーザー編集の単体テスト" do
+    context "編集できない時" do
+      it "友達として自分を指定した場合には保存ができない" do
+        user_friend = UserFriend.new(friends: [@user1.id], user_id: @user1.id)
+        user_friend.valid?
+        expect(user_friend.errors.full_messages).to include("Friends you're selecting is yourself.")
       end
     end
   end
