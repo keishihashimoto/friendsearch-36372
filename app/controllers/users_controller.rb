@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     @user_friend = UserFriend.new(user_params)
     if @user_friend.valid?
       @user_friend.save
-      redirect_to action: :index
+      redirect_to root_path
     else
       render :new
     end
@@ -38,9 +38,9 @@ class UsersController < ApplicationController
     @user_friend = UserFriend.new(user_friend_params)
     if @user_friend.valid?
       @user_friend.update
-      redirect_to action: :index
+      redirect_to root_path
     else
-      render edit
+      render :edit
     end
   end
 
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
     Friend.where(friend: @user.id).each do |friend|
       friend.destroy
     end
-    redirect_to action: :index
+    redirect_to root_path
   end
 
   private

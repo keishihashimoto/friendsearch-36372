@@ -8,7 +8,7 @@
     </div>
     <div class="form-group">
       <div class="my-2">お友達を全て選択してください</div>
-      <% unless User.all.any? %>
+      <% unless User.where.not(id: @user.id).any? %>
         <div>現在選択可能なお友達はいません</div>
       <% else %>
         <div class="form-check-inline">  
