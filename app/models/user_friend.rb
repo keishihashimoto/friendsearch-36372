@@ -38,7 +38,7 @@ class UserFriend
   def present_user?
     friends.each do |friend|
       unless User.exists?(id: friend)
-        errors.add(:firends, "selected doesn't exist.")
+        errors.add(:friends, "selected doesn't exist.")
         break
       end
     end
